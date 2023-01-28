@@ -10,9 +10,17 @@ let products = [
   },
 ];
 
+// Settings
+app.set("appName", "Express Rest Api");
+app.set("port", 3000);
+//Use only when it is necessary to respect upper and lower case letters in the url
+// app.set("case sensitive routing", true);
+
+// Middlewares
 app.use(morgan("dev"));
 app.use(express.json());
 
+// Routes
 app.get("/products", (req, res) => {
   res.json(products);
 });
@@ -73,5 +81,5 @@ app.get("/products/:id", (req, res) => {
   res.json(productFound);
 });
 
-app.listen(3000);
-console.log(`Server on port ${3000}`);
+app.listen(app.get("port"));
+console.log(`Server ${app.get("appName")} on port ${app.get("port")}`);
