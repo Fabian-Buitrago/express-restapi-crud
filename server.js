@@ -2,15 +2,30 @@ const express = require("express");
 const morgan = require("morgan");
 
 const app = express();
+const products = [
+  {
+    id: 1,
+    name: "Emilio",
+    price: 5000,
+  },
+];
 
 app.use(morgan("dev"));
+app.use(express.json());
 
 app.get("/products", (req, res) => {
-  res.send("getting products");
+  res.json(products);
 });
 
 app.post("/products", (req, res) => {
-  res.send("Creating products");
+  console.log(req.body);
+  const newProduct = {
+    ...req.body,
+    id: products.length + 1,
+  };
+
+  products.push(newProduct);
+  res.send(newProduct);
 });
 
 app.put("/products", (req, res) => {
@@ -22,7 +37,15 @@ app.delete("/products", (req, res) => {
 });
 
 app.get("/products/:id", (req, res) => {
-  res.send("getting a product by id");
+  const { id } = req.params;
+  const productFound = products.find((p) => p.id === parseInt(id));
+
+  if (!productFound) {
+    return res.status(400).json({
+      message: "Product not found",
+    });
+  }
+  res.json(productFound);
 });
 
 app.listen(3000);
